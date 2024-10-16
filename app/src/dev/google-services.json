@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "733808625933",
+    "project_id": "applocker-dev",
+    "storage_bucket": "applocker-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733808625933:android:79597bf82ce5a01d14c844",
+        "android_client_info": {
+          "package_name": "com.maliks.applocker.xtreme.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyP23F-uigiT8vqHBwdqp2YsU5_Jdn-rU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewState"
+            type="com.maliks.applocker.xtreme.ui.intruders.IntruderPhotoItemViewState" />
+
+        <!-- Use View.OnClickListener for the clearAllClickListener variable -->
+       
+    </data>
+
+    <com.maliks.applocker.xtreme.ui.common.view.SquareLayout
+        android:id="@+id/squareLayoutItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+        <!-- ImageView to display the photo -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_4dp"
+            android:background="@color/colorTextGray"
+            android:scaleType="centerCrop"
+            app:imageUri="@{viewState.photoUri}"
+            app:imageSize="@{viewState.imageSize}" />
+
+       
+
+    </com.maliks.applocker.xtreme.ui.common.view.SquareLayout>
+
+
+</layout>

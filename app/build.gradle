@@ -1,0 +1,146 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.bugsnag.android.gradle'
+apply plugin: 'kotlin-parcelize' 
+
+def configuration = rootProject.ext.configuration
+
+android {
+    namespace 'com.maliks.applocker.xtreme'
+    compileSdkVersion configuration.compileSdkVersion
+
+    flavorDimensions "build"
+    productFlavors {
+        dev {
+            dimension "build"
+            applicationIdSuffix ".dev"
+            minSdkVersion configuration.devMinSdkVersion
+        }
+        prod {
+            dimension "build"
+            minSdkVersion configuration.minSdkVersion
+        }
+       compileOptions {
+
+        // Use the Java toolchain for consistency and to automatically download the required JDK
+        java {
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(17)
+            }
+        }
+    }
+
+    }
+
+    defaultConfig {
+        applicationId configuration.package
+        minSdkVersion configuration.minSdkVersion
+        targetSdkVersion configuration.targetSdkVersion
+        versionCode configuration.versionCode
+        versionName configuration.versionName
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+    }
+
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Dagger dependencies
+    implementation 'com.google.dagger:dagger:2.48'
+    implementation 'com.google.dagger:dagger-android:2.48'
+    implementation 'com.google.dagger:dagger-android-support:2.48'
+    kapt 'com.google.dagger:dagger-compiler:2.48'
+    kapt 'com.google.dagger:dagger-android-processor:2.48'
+    kapt 'com.android.databinding:compiler:7.0.0'
+    implementation 'androidx.databinding:databinding-runtime:7.0.0' // Update version as necessary
+
+    // RxJava and Lifecycle dependencies
+
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.1'
+
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-reactivestreams-ktx:2.6.2'
+    kapt "androidx.lifecycle:lifecycle-compiler:2.6.2"
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Room Database
+    implementation "androidx.room:room-runtime:2.5.2"
+    implementation "androidx.room:room-rxjava2:2.5.2"
+    kapt "androidx.room:room-compiler:2.5.2"
+
+    // WorkManager
+    implementation "androidx.work:work-runtime-ktx:2.8.1"
+    implementation "androidx.work:work-rxjava2:2.8.1"
+
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.github.aritraroy.PatternLockView:patternlockview:a90b0d4bf0'
+
+    // Facebook SDK
+    implementation 'com.facebook.android:facebook-core:16.1.2'
+
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:33.2.0')
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
+    // Firebase dependencies
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-ads:23.3.0'
+
+    // Animation libraries
+    implementation 'com.daimajia.easing:library:2.0@aar'
+    implementation 'com.daimajia.androidanimations:library:2.4@aar'
+
+    // Additional libraries
+    implementation 'com.github.uccmawei:FingerprintIdentify:1.2.6'
+    implementation 'com.github.iammert:beaver:1.1'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.13.12'
+    implementation 'org.ocpsoft.prettytime:prettytime:5.0.4.Final'
+
+    // Bugsnag
+    implementation 'com.bugsnag:bugsnag-android:6.7.0'
+
+    implementation 'com.facebook.conceal:conceal:2.0.2'
+   
+    implementation 'com.facebook.stetho:stetho:1.6.0'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    implementation 'com.github.bumptech.glide:glide:4.15.1' // Use the latest version
+    kapt 'com.github.bumptech.glide:compiler:4.15.1' // For Kotlin projects
+
+}
+
+// Apply the Google Services plugin at the bottom
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
