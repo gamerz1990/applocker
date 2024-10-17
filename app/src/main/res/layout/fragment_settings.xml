@@ -5,12 +5,9 @@
     <data>
 
         <variable
-            name="viewState"
-            type="com.maliks.applocker.xtreme.ui.settings.SettingsViewState" />
+            name="viewModel"
+            type="com.maliks.applocker.xtreme.ui.settings.SettingsViewModel" />
 
-        <variable
-            name="fingerPrintStatus"
-            type="com.maliks.applocker.xtreme.ui.settings.FingerPrintStatusViewState" />
     </data>
 
     <ScrollView
@@ -39,7 +36,7 @@
                     android:layout_marginRight="@dimen/margin_32dp"
                     android:fontFamily="@font/avenir_medium"
                     android:text="@string/title_general_settings"
-                    android:textColor="@color/colorTextGray"
+                    android:textColor="@color/colorTextGray2"
                     android:textSize="@dimen/text_size_regular" />
 
                 <!-- Divider -->
@@ -70,8 +67,8 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/avenir_medium"
                             android:singleLine="true"
-                            android:text="@{viewState.lockAllAppsTitle(context)}"
-                            android:textColor="@color/colorTextGray"
+                            android:text="@{viewModel.settingsViewStateLiveData.lockAllAppsTitle(context)}"
+                            android:textColor="@color/colorTextGray2"
                             android:textSize="@dimen/text_size_regular" />
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -80,7 +77,7 @@
                             android:layout_marginTop="@dimen/margin_4dp"
                             android:fontFamily="@font/avenir_medium"
                             android:singleLine="true"
-                            android:text="@{viewState.lockAllAppsDescription(context)}"
+                            android:text="@{viewModel.settingsViewStateLiveData.lockAllAppsDescription(context)}"
                             android:textColor="@color/colorTextGrayLight"
                             android:textSize="@dimen/text_size_small" />
 
@@ -96,7 +93,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:padding="@dimen/margin_16dp"
-                        app:srcCompat="@{viewState.getLockAllAppsIcon(context)}" />
+                        app:srcCompat="@{viewModel.settingsViewStateLiveData.getLockAllAppsIcon(context)}" />
 
                 </RelativeLayout>
 
@@ -127,7 +124,7 @@
                         android:fontFamily="@font/avenir_medium"
                         android:singleLine="true"
                         android:text="@string/settings_change_pattern_title"
-                        android:textColor="@color/colorTextGray"
+                        android:textColor="@color/colorTextGray2"
                         android:textSize="@dimen/text_size_regular" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -175,7 +172,7 @@
                             android:fontFamily="@font/avenir_medium"
                             android:singleLine="true"
                             android:text="@string/setting_in_stealth_mode_title"
-                            android:textColor="@color/colorTextGray"
+                            android:textColor="@color/colorTextGray2"
                             android:textSize="@dimen/text_size_regular" />
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -197,7 +194,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/margin_16dp"
-                        android:checked="@{viewState.hiddenDrawingMode}" />
+                        android:checked="@{viewModel.settingsViewStateLiveData.hiddenDrawingMode}" />
 
                 </RelativeLayout>
 
@@ -233,8 +230,8 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/avenir_medium"
                             android:singleLine="true"
-                            android:text="@{fingerPrintStatus.getFingerPrintSettingTitle(context)}"
-                            android:textColor="@color/colorTextGray"
+                            android:text="@{viewModel.fingerPrintStatusViewStateLiveData.getFingerPrintSettingTitle(context)}"
+                            android:textColor="@color/colorTextGray2"
                             android:textSize="@dimen/text_size_regular" />
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -243,7 +240,7 @@
                             android:layout_marginTop="@dimen/margin_4dp"
                             android:fontFamily="@font/avenir_medium"
                             android:singleLine="true"
-                            android:text="@{fingerPrintStatus.getFingerPrintSettingSubtitle(context)}"
+                            android:text="@{viewModel.fingerPrintStatusViewStateLiveData.getFingerPrintSettingSubtitle(context)}"
                             android:textColor="@color/colorTextGrayLight"
                             android:textSize="@dimen/text_size_small" />
 
@@ -256,8 +253,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/margin_16dp"
-                        android:checked="@{viewState.fingerPrintEnabled}"
-                        android:enabled="@{fingerPrintStatus.fingerPrintCheckBoxEnabled}" />
+                        android:checked="@{viewModel.settingsViewStateLiveData.fingerPrintEnabled}"
+                        android:enabled="@{viewModel.fingerPrintStatusViewStateLiveData.fingerPrintCheckBoxEnabled}" />
 
                 </RelativeLayout>
 
@@ -290,7 +287,7 @@
                     android:layout_marginRight="@dimen/margin_32dp"
                     android:fontFamily="@font/avenir_medium"
                     android:text="@string/settings_card_intruders_title"
-                    android:textColor="@color/colorTextGray"
+                    android:textColor="@color/colorTextGray2"
                     android:textSize="@dimen/text_size_regular" />
 
                 
@@ -319,7 +316,7 @@
                             android:fontFamily="@font/avenir_medium"
                             android:singleLine="true"
                             android:text="@string/settings_enable_intruders_title"
-                            android:textColor="@color/colorTextGray"
+                            android:textColor="@color/colorTextGray2"
                             android:textSize="@dimen/text_size_regular" />
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -340,7 +337,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/margin_16dp"
-                        android:checked="@{viewState.intrudersCatcherEnabled}" />
+                        android:checked="@{viewModel.settingsViewStateLiveData.intrudersCatcherEnabled}" />
 
                 </RelativeLayout>
 
@@ -371,7 +368,7 @@
                         android:fontFamily="@font/avenir_medium"
                         android:singleLine="true"
                         android:text="@string/settings_intruders_folder_title"
-                        android:textColor="@color/colorTextGray"
+                        android:textColor="@color/colorTextGray2"
                         android:textSize="@dimen/text_size_regular" />
 
                     <androidx.appcompat.widget.AppCompatTextView

@@ -8,7 +8,6 @@ import com.maliks.applocker.xtreme.data.AppLockerPreferences
 import com.maliks.applocker.xtreme.data.database.lockedapps.LockedAppEntity
 import com.maliks.applocker.xtreme.data.database.lockedapps.LockedAppsDao
 import com.maliks.applocker.xtreme.ui.RxAwareAndroidViewModel
-import com.maliks.applocker.xtreme.ui.RxAwareViewModel
 import com.maliks.applocker.xtreme.util.extensions.doOnBackground
 import com.maliks.applocker.xtreme.util.extensions.plusAssign
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify
@@ -23,26 +22,27 @@ class SettingsViewModel @Inject constructor(
     val appLockerPreferences: AppLockerPreferences
 ) : RxAwareAndroidViewModel(app) {
 
-    private val settingsViewStateLiveData = MutableLiveData<SettingsViewState>()
-        .apply {
-            value = SettingsViewState(
-                isHiddenDrawingMode = appLockerPreferences.getHiddenDrawingMode(),
-                isFingerPrintEnabled = appLockerPreferences.getFingerPrintEnabled()
+    private val _settingsViewStateLiveData = MutableLiveData<SettingsViewState>()
+    val settingsViewStateLiveData: LiveData<SettingsViewState> get() = _settingsViewStateLiveData
+
+    private val _fingerPrintStatusViewStateLiveData = MutableLiveData<FingerPrintStatusViewState>()
+    val fingerPrintStatusViewStateLiveData: LiveData<FingerPrintStatusViewState> get() = _fingerPrintStatusViewStateLiveData
+
+    init {
+        _settingsViewStateLiveData.value = SettingsViewState(
+            isHiddenDrawingMode = appLockerPreferences.getHiddenDrawingMode(),
+            isFingerPrintEnabled = appLockerPreferences.getFingerPrintEnabled(),
+            isIntrudersCatcherEnabled = appLockerPreferences.getIntrudersCatcherEnabled()
+        )
+
+        with(FingerprintIdentify(app)) {
+            init()
+            _fingerPrintStatusViewStateLiveData.value = FingerPrintStatusViewState(
+                isFingerPrintSupported = isHardwareEnable,
+                isFingerPrintRegistered = isRegisteredFingerprint
             )
         }
 
-    private val fingerPrintStatusViewStateLiveData = MutableLiveData<FingerPrintStatusViewState>()
-        .apply {
-            with(FingerprintIdentify(app)) {
-                init()
-                value = FingerPrintStatusViewState(
-                    isFingerPrintSupported = isHardwareEnable,
-                    isFingerPrintRegistered = isRegisteredFingerprint
-                )
-            }
-        }
-
-    init {
         val installedAppsObservable = appDataProvider.fetchInstalledAppList().toObservable()
         val lockedAppsObservable = lockedAppsDao.getLockedApps().toObservable()
 
@@ -53,20 +53,12 @@ class SettingsViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { isAllAppsLocked ->
-                settingsViewStateLiveData.value =
-                    SettingsViewState(
-                        isAllAppLocked = isAllAppsLocked,
-                        isHiddenDrawingMode = appLockerPreferences.getHiddenDrawingMode(),
-                        isFingerPrintEnabled = appLockerPreferences.getFingerPrintEnabled(),
-                        isIntrudersCatcherEnabled = appLockerPreferences.getIntrudersCatcherEnabled()
-                    )
+                val currentViewState = _settingsViewStateLiveData.value ?: SettingsViewState()
+                _settingsViewStateLiveData.value = currentViewState.copy(
+                    isAllAppLocked = isAllAppsLocked
+                )
             }
     }
-
-    fun getSettingsViewStateLiveData(): LiveData<SettingsViewState> = settingsViewStateLiveData
-
-    fun getFingerPrintStatusViewStateLiveData(): LiveData<FingerPrintStatusViewState> =
-        fingerPrintStatusViewStateLiveData
 
     fun isAllLocked() = settingsViewStateLiveData.value?.isAllAppLocked ?: false
 
@@ -77,8 +69,8 @@ class SettingsViewModel @Inject constructor(
             .fetchInstalledAppList()
             .map {
                 val entityList: ArrayList<LockedAppEntity> = arrayListOf()
-                it.forEach {
-                    entityList.add(it.toEntity())
+                it.forEach { appData ->
+                    entityList.add(appData.toEntity())
                 }
                 lockedAppsDao.lockApps(entityList)
             }
@@ -95,37 +87,33 @@ class SettingsViewModel @Inject constructor(
 
     fun setHiddenDrawingMode(hiddenDrawingMode: Boolean) {
         appLockerPreferences.setHiddenDrawingMode(hiddenDrawingMode)
-        val currentViewState = settingsViewStateLiveData.value
-        val updatedViewState = SettingsViewState(
-            isAllAppLocked = currentViewState?.isAllAppLocked ?: false,
-            isHiddenDrawingMode = hiddenDrawingMode,
-            isFingerPrintEnabled = appLockerPreferences.getFingerPrintEnabled(),
-            isIntrudersCatcherEnabled = appLockerPreferences.getIntrudersCatcherEnabled()
+        val currentViewState = _settingsViewStateLiveData.value ?: SettingsViewState()
+        _settingsViewStateLiveData.value = currentViewState.copy(
+            isHiddenDrawingMode = hiddenDrawingMode
         )
-        settingsViewStateLiveData.value = updatedViewState
     }
 
     fun setEnableFingerPrint(fingerPrintEnabled: Boolean) {
         appLockerPreferences.setFingerPrintEnable(fingerPrintEnabled)
-        val currentViewState = settingsViewStateLiveData.value
-        val updatedViewState = SettingsViewState(
-            isAllAppLocked = currentViewState?.isAllAppLocked ?: false,
-            isHiddenDrawingMode = appLockerPreferences.getHiddenDrawingMode(),
-            isFingerPrintEnabled = fingerPrintEnabled,
-            isIntrudersCatcherEnabled = appLockerPreferences.getIntrudersCatcherEnabled()
+        val currentViewState = _settingsViewStateLiveData.value ?: SettingsViewState()
+        _settingsViewStateLiveData.value = currentViewState.copy(
+            isFingerPrintEnabled = fingerPrintEnabled
         )
-        settingsViewStateLiveData.value = updatedViewState
     }
 
     fun setEnableIntrudersCatchers(intruderCatcherEnabled: Boolean) {
         appLockerPreferences.setIntrudersCatcherEnable(intruderCatcherEnabled)
-        val currentViewState = settingsViewStateLiveData.value
-        val updatedViewState = SettingsViewState(
-            isAllAppLocked = currentViewState?.isAllAppLocked ?: false,
-            isHiddenDrawingMode = appLockerPreferences.getHiddenDrawingMode(),
-            isFingerPrintEnabled = appLockerPreferences.getFingerPrintEnabled(),
-            isIntrudersCatcherEnabled = appLockerPreferences.getIntrudersCatcherEnabled()
+        val currentViewState = _settingsViewStateLiveData.value ?: SettingsViewState()
+        _settingsViewStateLiveData.value = currentViewState.copy(
+            isIntrudersCatcherEnabled = intruderCatcherEnabled
         )
-        settingsViewStateLiveData.value = updatedViewState
+    }
+
+    fun onLockAllAppsClicked() {
+        if (isAllLocked()) {
+            unlockAll()
+        } else {
+            lockAll()
+        }
     }
 }

@@ -33,7 +33,7 @@
     <dimen name="height_background_item">160dp</dimen>
 
     <dimen name="item_main_action_size">56dp</dimen>
-    <dimen name="item_main_action_image_size">24dp</dimen>
+    <dimen name="item_main_action_image_size">35dp</dimen>
     <dimen name="main_actions_size">108dp</dimen>
     <dimen name="security_recyclerview_padding_top">116dp</dimen>
 

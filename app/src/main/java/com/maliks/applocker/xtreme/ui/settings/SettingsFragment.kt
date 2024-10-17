@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
 import com.maliks.applocker.xtreme.R
 import com.maliks.applocker.xtreme.databinding.FragmentSettingsBinding
 import com.maliks.applocker.xtreme.ui.BaseFragment
@@ -53,18 +52,18 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Set lifecycleOwner and viewModel on the binding
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
+        // Set up listeners
         binding.imageViewLockAll.setOnClickListener {
             activity?.let { activity ->
-                if (PermissionChecker.checkUsageAccessPermission(activity).not()) {
+                if (!PermissionChecker.checkUsageAccessPermission(activity)) {
                     UsageAccessPermissionDialog.newInstance()
                         .show(activity.supportFragmentManager, "")
                 } else {
-                    if (viewModel.isAllLocked()) {
-                        viewModel.unlockAll()
-                    } else {
-                        viewModel.lockAll()
-                    }
+                    viewModel.onLockAllAppsClicked()
                 }
             }
         }
@@ -91,7 +90,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
 
         binding.layoutIntrudersFolder.setOnClickListener {
             activity?.let {
-                if (viewModel.isIntrudersCatcherEnabled().not()) {
+                if (!viewModel.isIntrudersCatcherEnabled()) {
                     SettingsAnalytics.intrudersEnabled(it)
                     enableIntrudersCatcher(true)
                 } else {
@@ -104,17 +103,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        viewModel.getSettingsViewStateLiveData().observe(viewLifecycleOwner, Observer {
-            binding.viewState = it
-        })
-
-        viewModel.getFingerPrintStatusViewStateLiveData().observe(viewLifecycleOwner, Observer {
-            binding.fingerPrintStatus = it
-        })
-    }
+    // Removed manual observers; data binding will handle LiveData observation
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

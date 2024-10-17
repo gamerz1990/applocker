@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import com.maliks.applocker.xtreme.R
 
-data class SettingsViewState(
+data class SettingsViewState (
     val isAllAppLocked: Boolean = false,
     val isHiddenDrawingMode: Boolean = false,
     val isFingerPrintEnabled: Boolean = false,
@@ -16,6 +16,7 @@ data class SettingsViewState(
         return if (isAllAppLocked) {
             ContextCompat.getDrawable(context, R.drawable.ic_locked_24px)
         } else {
+
             ContextCompat.getDrawable(context, R.drawable.ic_lock_open_24px)
         }
     }

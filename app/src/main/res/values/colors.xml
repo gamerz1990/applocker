@@ -14,7 +14,9 @@
    
     <color name="colorTextGrayLightAlpha">#80818181</color>
     <color name="colorTextGrayLight">#818181</color>
-    <color name="colorTextGray">#5F5F5F</color>
+    <color name="colorTextGray">#919090</color>
+    <color name="colorTextGray2">#CAC9C9</color>
+
     <color name="colorTextGrayDark">#414141</color>
 
     <color name="colorDialogIndicator">#dddddd</color>

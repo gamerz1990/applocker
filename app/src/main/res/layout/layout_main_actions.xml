@@ -113,7 +113,7 @@
                             android:layout_width="@dimen/item_main_action_image_size"
                             android:layout_height="@dimen/item_main_action_image_size"
                             android:layout_centerInParent="true"
-                            app:srcCompat="@drawable/ic_browser"/>
+                            app:srcCompat="@drawable/exploer"/>
 
                 </RelativeLayout>
 
@@ -142,15 +142,15 @@
                          >
 
                 <RelativeLayout android:layout_width="@dimen/item_main_action_size"
-                                android:layout_height="@dimen/item_main_action_size"
-                                android:background="@android:color/transparent"
-                                >
+                    android:layout_height="@dimen/item_main_action_size"
+                    android:background="@drawable/bg_icon_theme">
+                >
 
                     <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="@dimen/item_main_action_image_size"
                             android:layout_height="@dimen/item_main_action_image_size"
                             android:layout_centerInParent="true"
-                            app:srcCompat="@drawable/ic_background"/>
+                            app:srcCompat="@drawable/paint"/>
 
                 </RelativeLayout>
 
