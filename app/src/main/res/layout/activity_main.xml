@@ -8,27 +8,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-       
         tools:openDrawer="start">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-       
-
             tools:context=".ui.main.MainActivity">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-              
                 android:theme="@style/AppTheme.AppBarOverlay">
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                   
                     app:popupTheme="@style/AppTheme.PopupOverlay">
 
                     <RelativeLayout
@@ -65,8 +60,7 @@
                     style="@style/TabLayoutStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:elevation="0dp"
-                    />
+                    app:elevation="0dp" />
 
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -74,21 +68,22 @@
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-               
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="#0e1111"
-            android:fitsSystemWindows="true"
-            app:headerLayout="@layout/nav_header_main"
-            app:itemBackground="@drawable/bg_gradient_vault"
-            app:menu="@menu/activity_main_drawer" />
+            android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@drawable/side_menu_background"
+        android:fitsSystemWindows="true"
+        app:itemIconTint="@color/colorWhite"
+        app:itemTextColor="@color/colorWhite"
+        app:headerLayout="@layout/nav_header_main"
+        app:itemBackground="@drawable/menu_item_background"
+        app:menu="@menu/activity_main_drawer" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
