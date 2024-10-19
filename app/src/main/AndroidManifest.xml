@@ -86,8 +86,12 @@
                 android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
 
         </activity>
+
+
+
         <!-- Services -->
-        <service android:name=".service.AppLockerService"  android:foregroundServiceType="dataSync"/> 
+
+        <service android:name=".service.AppLockerService"  android:foregroundServiceType="dataSync"/>
         <!-- Receivers -->
 
         <receiver android:name=".service.AppLockerService" android:exported="false">
@@ -152,6 +156,8 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/mobile_ad_id" />
+
+
     </application>
 
 </manifest>

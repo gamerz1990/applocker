@@ -17,7 +17,9 @@ import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import com.andrognito.patternlockview.PatternLockView
+import com.bugsnag.android.App
 import com.bugsnag.android.Bugsnag
+import com.maliks.applocker.xtreme.R
 import com.maliks.applocker.xtreme.data.AppLockerPreferences
 import com.maliks.applocker.xtreme.data.SystemPackages
 import com.maliks.applocker.xtreme.data.database.lockedapps.LockedAppsDao
@@ -31,6 +33,7 @@ import com.maliks.applocker.xtreme.ui.overlay.activity.OverlayValidationActivity
 import com.maliks.applocker.xtreme.ui.overlay.view.OverlayViewLayoutParams
 import com.maliks.applocker.xtreme.ui.overlay.view.PatternOverlayView
 import com.maliks.applocker.xtreme.ui.permissions.PermissionChecker
+import com.maliks.applocker.xtreme.util.AdManager
 import com.maliks.applocker.xtreme.util.extensions.convertToPatternDot
 import com.maliks.applocker.xtreme.util.extensions.plusAssign
 import dagger.android.DaggerService
@@ -266,7 +269,7 @@ class AppLockerService : DaggerService() {
     private fun onPatternValidated(isPatternCorrect: Boolean) {
         if (isPatternCorrect) {
             overlayView.notifyDrawnCorrect()
-            hideOverlay()
+            hideOverlay();
         } else {
             overlayView.notifyDrawnWrong()
         }

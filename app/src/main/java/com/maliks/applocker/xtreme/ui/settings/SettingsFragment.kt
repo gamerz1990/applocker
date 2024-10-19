@@ -18,6 +18,7 @@ import com.maliks.applocker.xtreme.ui.newpattern.CreateNewPatternActivity
 import com.maliks.applocker.xtreme.ui.permissiondialog.UsageAccessPermissionDialog
 import com.maliks.applocker.xtreme.ui.permissions.PermissionChecker
 import com.maliks.applocker.xtreme.ui.settings.analytics.SettingsAnalytics
+import com.maliks.applocker.xtreme.util.AdManager
 import com.maliks.applocker.xtreme.util.delegate.inflate
 import com.maliks.applocker.xtreme.util.extensions.toast
 
@@ -65,26 +66,35 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
                 } else {
                     viewModel.onLockAllAppsClicked()
                 }
+                AdManager.getInstance(activity, getString(R.string.dashboard_ad_inter)).showInterstitialAd(activity);
             }
         }
 
         binding.layoutChangePattern.setOnClickListener {
             activity?.let {
                 startActivityForResult(CreateNewPatternActivity.newIntent(it), RC_CHANGE_PATTERN)
+                AdManager.getInstance(it, getString(R.string.dashboard_ad_inter)).showInterstitialAd(it);
+
             }
         }
 
         binding.switchStealth.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setHiddenDrawingMode(isChecked)
+
         }
 
         binding.switchFingerPrint.setOnCheckedChangeListener { _, isChecked ->
-            activity?.let { SettingsAnalytics.fingerPrintEnabled(it) }
+            activity?.let { SettingsAnalytics.fingerPrintEnabled(it)
+                AdManager.getInstance(it, getString(R.string.dashboard_ad_inter)).showInterstitialAd(it);
+            }
             viewModel.setEnableFingerPrint(isChecked)
+
         }
 
         binding.switchEnableIntrudersCatcher.setOnCheckedChangeListener { _, isChecked ->
-            activity?.let { SettingsAnalytics.intrudersEnabled(it) }
+            activity?.let { SettingsAnalytics.intrudersEnabled(it)
+                AdManager.getInstance(it, getString(R.string.dashboard_ad_inter)).showInterstitialAd(it);
+            }
             enableIntrudersCatcher(isChecked)
         }
 
@@ -97,6 +107,8 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
                     SettingsAnalytics.intrudersFolderClicked(it)
                     startActivity(IntrudersPhotosActivity.newIntent(it))
                 }
+                AdManager.getInstance(it, getString(R.string.dashboard_ad_inter)).showInterstitialAd(it);
+
             }
         }
 
@@ -127,6 +139,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
         } else {
             viewModel.setEnableIntrudersCatchers(false)
         }
+
     }
 
     private fun showPermissionsRationale() {

@@ -26,6 +26,7 @@ import com.maliks.applocker.xtreme.ui.permissions.PermissionChecker
 import com.maliks.applocker.xtreme.ui.permissions.PermissionsActivity
 import com.maliks.applocker.xtreme.ui.policydialog.PrivacyPolicyDialog
 import com.maliks.applocker.xtreme.ui.rateus.RateUsDialog
+import com.maliks.applocker.xtreme.util.AdManager
 import com.maliks.applocker.xtreme.util.helper.NavigationIntentHelper
 
 class MainActivity : BaseActivity<MainViewModel>(), NavigationView.OnNavigationItemSelectedListener {
@@ -50,7 +51,10 @@ class MainActivity : BaseActivity<MainViewModel>(), NavigationView.OnNavigationI
             }
         })
 
-        binding.imageViewMenu.setOnClickListener { binding.drawerLayout.openDrawer(GravityCompat.START) }
+        binding.imageViewMenu.setOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+            AdManager.getInstance(this, getString(R.string.dashboard_ad_inter)).showInterstitialAd(this);
+        }
 
         binding.navView.setNavigationItemSelectedListener(this)
 
@@ -101,6 +105,8 @@ class MainActivity : BaseActivity<MainViewModel>(), NavigationView.OnNavigationI
         } else {
             super.onBackPressed()
         }
+        AdManager.getInstance(this, getString(R.string.dashboard_ad_inter)).showInterstitialAd(this);
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -138,6 +144,8 @@ class MainActivity : BaseActivity<MainViewModel>(), NavigationView.OnNavigationI
         if (viewModel.isPrivacyPolicyAccepted().not()) {
             PrivacyPolicyDialog.newInstance().show(supportFragmentManager, "")
         }
+        AdManager.getInstance(this, getString(R.string.dashboard_ad_inter)).showInterstitialAd(this);
+
     }
         private fun requestAutoStartPermission(context: Context) {
         try {

@@ -20,6 +20,7 @@ import com.maliks.applocker.xtreme.ui.intruders.camera.FrontPictureState
 import com.maliks.applocker.xtreme.ui.newpattern.SimplePatternListener
 import com.maliks.applocker.xtreme.ui.overlay.analytics.OverlayAnalytics
 import com.maliks.applocker.xtreme.ui.vault.analytics.VaultAdAnalytics
+import com.maliks.applocker.xtreme.util.AdManager
 import com.maliks.applocker.xtreme.util.ads.AdTestDevices
 import com.maliks.applocker.xtreme.util.extensions.convertToPatternDot
 import com.maliks.applocker.xtreme.util.helper.file.FileManager
@@ -51,8 +52,10 @@ class OverlayValidationActivity : BaseActivity<OverlayValidationViewModel>() {
             binding.executePendingBindings()
 
             if (it.isDrawnCorrect == true || it.fingerPrintResultData?.isSucces() == true) {
+                AdManager.getInstance(this, this.getString(R.string.dashboard_ad_inter)).showInterstitialAd(this);
                 setResult(Activity.RESULT_OK)
                 finish()
+
             }
 
             if (it.isDrawnCorrect == false || it.fingerPrintResultData?.isNotSucces() == true) {
@@ -114,7 +117,7 @@ class OverlayValidationActivity : BaseActivity<OverlayValidationViewModel>() {
         MobileAds.setRequestConfiguration(configuration)
 
         val mAdView = AdView(this).apply {
-            setAdSize(AdSize.BANNER)
+            setAdSize(AdSize.MEDIUM_RECTANGLE)
             adUnitId = getString(R.string.overlay_banner_ad_unit_id)
             adListener = object : AdListener() {
                 override fun onAdClicked() {
@@ -134,7 +137,7 @@ class OverlayValidationActivity : BaseActivity<OverlayValidationViewModel>() {
             }
         }
 
-        binding.adContainer.addView(mAdView)
+        binding.adView.addView(mAdView)
 
         // Build the ad request
         val adRequest = AdRequest.Builder().build()

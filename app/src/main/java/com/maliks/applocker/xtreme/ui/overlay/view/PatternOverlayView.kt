@@ -13,10 +13,19 @@ import com.maliks.applocker.xtreme.databinding.ViewPatternOverlayBinding
 import com.maliks.applocker.xtreme.ui.newpattern.SimplePatternListener
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.maliks.applocker.xtreme.data.AppLockerPreferences
 import com.maliks.applocker.xtreme.ui.background.GradientBackgroundDataProvider
 import com.maliks.applocker.xtreme.ui.overlay.OverlayValidateType
 import com.maliks.applocker.xtreme.ui.overlay.OverlayViewState
+import com.maliks.applocker.xtreme.ui.vault.analytics.VaultAdAnalytics
+import com.maliks.applocker.xtreme.util.ads.AdTestDevices
 
 class PatternOverlayView @JvmOverloads constructor(
     context: Context,
@@ -42,6 +51,7 @@ class PatternOverlayView @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        showBannerAd();
         updateSelectedBackground()
         binding.patternLockView.clearPattern()
         binding.viewState = OverlayViewState()
@@ -93,5 +103,46 @@ class PatternOverlayView @JvmOverloads constructor(
                 binding.layoutOverlayMain.background = it.getGradiendDrawable(context)
             }
         }
+    }
+
+    private fun showBannerAd() {
+        // Initialize Mobile Ads SDK
+        MobileAds.initialize(context) { initializationStatus ->
+            // Optional: Handle initialization status if needed
+        }
+
+        // Set test device IDs
+        val testDeviceIds = AdTestDevices.DEVICES
+        val configuration = RequestConfiguration.Builder()
+            .setTestDeviceIds(testDeviceIds)
+            .build()
+        MobileAds.setRequestConfiguration(configuration)
+
+        val mAdView = AdView(context).apply {
+            setAdSize(AdSize.MEDIUM_RECTANGLE)
+            adUnitId = context.getString(R.string.overlay_banner_ad_unit_id)
+            adListener = object : AdListener() {
+                override fun onAdClicked() {
+                    super.onAdClicked()
+                    VaultAdAnalytics.bannerAdClicked(context)
+                }
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    super.onAdFailedToLoad(adError)
+                    VaultAdAnalytics.bannerAdFailed(context)
+                }
+
+                override fun onAdLoaded() {
+                    super.onAdLoaded()
+                    VaultAdAnalytics.bannerAdLoaded(context)
+                }
+            }
+        }
+
+        binding.adView.addView(mAdView)
+
+        // Build the ad request
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
     }
 }

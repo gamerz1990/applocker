@@ -17,6 +17,7 @@ import com.maliks.applocker.xtreme.ui.permissions.PermissionChecker
 import com.maliks.applocker.xtreme.ui.security.analytics.SecurityFragmentAnalytics
 import com.maliks.applocker.xtreme.ui.vault.VaultActivity
 import com.maliks.applocker.xtreme.ui.vault.analytics.VaultAdAnalytics
+import com.maliks.applocker.xtreme.util.AdManager
 import com.maliks.applocker.xtreme.util.ads.AdTestDevices
 import com.maliks.applocker.xtreme.util.delegate.inflate
 
@@ -40,6 +41,7 @@ class SecurityFragment : BaseFragment<SecurityViewModel>() {
                 binding.layoutMainActions.root,
                 resources.getDimension(R.dimen.main_actions_size) + resources.getDimension(R.dimen.margin_16dp)
             )
+
         )
 
 //        binding.layoutMainActions.layoutCallBlocker.setOnClickListener {
@@ -52,6 +54,8 @@ class SecurityFragment : BaseFragment<SecurityViewModel>() {
             activity?.let {
                 startActivity(BackgroundsActivity.newIntent(it))
                 SecurityFragmentAnalytics.onBackgroundClicked(it)
+                AdManager.getInstance(it, getString(R.string.dashboard_ad_inter))
+                    .showInterstitialAd(it);
             }
         }
 
@@ -59,6 +63,8 @@ class SecurityFragment : BaseFragment<SecurityViewModel>() {
             activity?.let {
                 startActivity(BrowserActivity.newIntent(it))
                 SecurityFragmentAnalytics.onBrowserClicked(it)
+                AdManager.getInstance(it, getString(R.string.dashboard_ad_inter))
+                    .showInterstitialAd(it);
             }
         }
 
@@ -66,6 +72,8 @@ class SecurityFragment : BaseFragment<SecurityViewModel>() {
             activity?.let {
                 startActivity(VaultActivity.newIntent(it))
                 SecurityFragmentAnalytics.onVaultClicked(it)
+                AdManager.getInstance(it, getString(R.string.dashboard_ad_inter))
+                    .showInterstitialAd(it);
             }
         }
         return binding.root
@@ -96,9 +104,11 @@ class SecurityFragment : BaseFragment<SecurityViewModel>() {
                     viewModel.lockApp(selectedApp)
                 }
             }
-        }
-    }
+            AdManager.getInstance(it, getString(R.string.dashboard_ad_inter)).showInterstitialAd(it);
 
+        }
+
+    }
     private fun showBannerAd() {
         activity?.let { activity ->
             MobileAds.initialize(activity)
