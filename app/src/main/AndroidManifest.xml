@@ -99,13 +99,7 @@
         <service android:name=".service.AppLockerService"  android:foregroundServiceType="dataSync"/>
         <!-- Receivers -->
 
-        <receiver android:name=".service.AppLockerService" android:exported="false">
-            <intent-filter android:priority="100">
-                <action android:name="android.intent.action.PACKAGE_INSTALL"/>
-                <action android:name="android.intent.action.PACKAGE_ADDED"/>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-            </intent-filter>
-        </receiver>
+
         <receiver
             android:name=".service.receiver.BootCompleteReceiver"
               android:enabled="true"
