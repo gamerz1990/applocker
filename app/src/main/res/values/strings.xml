@@ -3,7 +3,8 @@
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
-
+    <string name="auto_start_error">Auto start not enabled! </string>
+    <string name="auto_start_not_supported">Auto start enabled!</string>
     <!-- AD unit ids-->
     <string name="mobile_ad_id" translatable="false">ca-app-pub-1870529779698535~6813379496</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-1870529779698535/4723899634</string>

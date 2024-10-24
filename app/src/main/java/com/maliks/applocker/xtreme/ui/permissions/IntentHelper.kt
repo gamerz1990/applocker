@@ -17,7 +17,7 @@ object IntentHelper {
     }
 
     fun privacyPolicyWebIntent(): Intent {
-        return Intent(Intent.ACTION_VIEW, Uri.parse("http://bit.ly/2UOmxEy"))
+        return Intent(Intent.ACTION_VIEW, Uri.parse("https://sc.hailz.co/privacy.html"))
     }
 
     fun rateUsIntent(): Intent {
@@ -26,10 +26,10 @@ object IntentHelper {
 
     fun startStorePage(activity: Activity) {
         try {
-            activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pub:Momento Labs")))
+            activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pub:Malik.co")))
         } catch (anfe: android.content.ActivityNotFoundException) {
             activity.startActivity(
-                Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/developer?id=Momento Labs"))
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/developer?id=Malik.co"))
             )
         }
     }

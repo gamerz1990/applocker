@@ -25,11 +25,14 @@
 
         <ImageView
             android:id="@+id/usageAccessGifImageView"
-            android:layout_width="400dp"
-            android:layout_height="600dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-           />
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:maxHeight="400dp" />
 
 
     </LinearLayout>

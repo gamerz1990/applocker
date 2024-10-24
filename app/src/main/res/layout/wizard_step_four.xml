@@ -23,13 +23,18 @@
             android:text="To enhance app functionality, please enable overlay permission for this app."
             android:paddingBottom="16dp" />
 
+
         <ImageView
             android:id="@+id/overlayGifImageView"
-            android:layout_width="400dp"
-            android:layout_height="600dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            />
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:maxHeight="400dp" />
+
 
     </LinearLayout>
 </ScrollView>

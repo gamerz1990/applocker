@@ -12,6 +12,9 @@ import android.util.Log
 import com.google.android.material.navigation.NavigationView
 import androidx.core.view.GravityCompat
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
@@ -22,17 +25,19 @@ import com.maliks.applocker.xtreme.ui.PermissionWizardActivity
 import com.maliks.applocker.xtreme.ui.main.analytics.MainActivityAnalytics
 import com.maliks.applocker.xtreme.ui.newpattern.CreateNewPatternActivity
 import com.maliks.applocker.xtreme.ui.overlay.activity.OverlayValidationActivity
-import com.maliks.applocker.xtreme.ui.permissions.PermissionChecker
-import com.maliks.applocker.xtreme.ui.permissions.PermissionsActivity
 import com.maliks.applocker.xtreme.ui.policydialog.PrivacyPolicyDialog
-import com.maliks.applocker.xtreme.ui.rateus.RateUsDialog
 import com.maliks.applocker.xtreme.util.AdManager
 import com.maliks.applocker.xtreme.util.helper.NavigationIntentHelper
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : BaseActivity<MainViewModel>(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPreferences: SharedPreferences
+
+    // Activity Result Launchers
+    private lateinit var createPatternLauncher: ActivityResultLauncher<Intent>
+    private lateinit var overlayValidationLauncher: ActivityResultLauncher<Intent>
 
     override fun getViewModel(): Class<MainViewModel> = MainViewModel::class.java
 
@@ -40,6 +45,34 @@ class MainActivity : BaseActivity<MainViewModel>(), NavigationView.OnNavigationI
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        sharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+        setupActivityResultLaunchers()
+        setupViewPager()
+        setupNavigationDrawer()
+        handleFirstLaunch()
+        handleAutoStartPermission()
+    }
+
+    private fun setupActivityResultLaunchers() {
+        createPatternLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                viewModel.onAppLaunchValidated()
+                showPrivacyPolicyIfNeeded()
+            } else {
+                finish()
+            }
+        }
+
+        overlayValidationLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                viewModel.onAppLaunchValidated()
+            } else {
+                finish()
+            }
+        }
+    }
+
+    private fun setupViewPager() {
         binding.viewPager.adapter = MainPagerAdapter(this, supportFragmentManager)
         binding.tablayout.setupWithViewPager(binding.viewPager)
         binding.viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
@@ -50,52 +83,30 @@ class MainActivity : BaseActivity<MainViewModel>(), NavigationView.OnNavigationI
                 }
             }
         })
+    }
 
+    private fun setupNavigationDrawer() {
         binding.imageViewMenu.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.START)
-            AdManager.getInstance(this, getString(R.string.dashboard_ad_inter)).showInterstitialAd(this);
+            AdManager.getInstance(this, getString(R.string.dashboard_ad_inter)).showInterstitialAd(this)
         }
-
         binding.navView.setNavigationItemSelectedListener(this)
+    }
 
-        viewModel.getPatternCreationNeedLiveData().observe(this, Observer { isPatternCreateNeed ->
-            when {
-                isPatternCreateNeed -> {
-                    startActivityForResult(
-                        CreateNewPatternActivity.newIntent(this),
-                        RC_CREATE_PATTERN
-                    )
-                }
-                viewModel.isAppLaunchValidated().not() -> {
-                    startActivityForResult(
-                        OverlayValidationActivity.newIntent(this, this.packageName),
-                        RC_VALIDATE_PATTERN
-                    )
-                }
-            }
-        })
-
-        sharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-        val isAutoStartPermissionRequested = sharedPreferences.getBoolean("auto_start_requested", false)
-        val isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true)
-         if (isFirstLaunch) {
-                    // Launch PermissionWizardActivity
-                    val intent = Intent(this, PermissionWizardActivity::class.java)
-                    startActivity(intent)
-
-                    // Mark that the app has been launched
-                    markAppAsLaunched()
+    private fun handleFirstLaunch() {
+        val isFirstLaunch = sharedPreferences.getBoolean(KEY_IS_FIRST_LAUNCH, true)
+        if (isFirstLaunch) {
+            val intent = Intent(this, PermissionWizardActivity::class.java)
+            startActivity(intent)
+            markAppAsLaunched()
         }
+    }
 
-
+    private fun handleAutoStartPermission() {
+        val isAutoStartPermissionRequested = sharedPreferences.getBoolean(KEY_AUTO_START_REQUESTED, false)
         if (!isAutoStartPermissionRequested) {
             requestAutoStartPermission(this)
-
-            // Save the fact that we've requested auto-start permission
-            with(sharedPreferences.edit()) {
-                putBoolean("auto_start_requested", true)
-                apply()
-            }
+            sharedPreferences.edit().putBoolean(KEY_AUTO_START_REQUESTED, true).apply()
         }
     }
 
@@ -105,8 +116,7 @@ class MainActivity : BaseActivity<MainViewModel>(), NavigationView.OnNavigationI
         } else {
             super.onBackPressed()
         }
-        AdManager.getInstance(this, getString(R.string.dashboard_ad_inter)).showInterstitialAd(this);
-
+        AdManager.getInstance(this, getString(R.string.dashboard_ad_inter)).showInterstitialAd(this)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -119,35 +129,13 @@ class MainActivity : BaseActivity<MainViewModel>(), NavigationView.OnNavigationI
         return true
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            RC_CREATE_PATTERN -> {
-                viewModel.onAppLaunchValidated()
-                showPrivacyPolicyIfNeeded()
-                if (resultCode != Activity.RESULT_OK) {
-                    finish()
-                }
-            }
-            RC_VALIDATE_PATTERN -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    viewModel.onAppLaunchValidated()
-                    showPrivacyPolicyIfNeeded()
-                } else {
-                    finish()
-                }
-            }
-        }
-    }
-
     private fun showPrivacyPolicyIfNeeded() {
-        if (viewModel.isPrivacyPolicyAccepted().not()) {
+        if (!viewModel.isPrivacyPolicyAccepted()) {
             PrivacyPolicyDialog.newInstance().show(supportFragmentManager, "")
         }
-        AdManager.getInstance(this, getString(R.string.dashboard_ad_inter)).showInterstitialAd(this);
-
     }
-        private fun requestAutoStartPermission(context: Context) {
+
+    private fun requestAutoStartPermission(context: Context) {
         try {
             val intent = Intent()
             val manufacturer = android.os.Build.MANUFACTURER.lowercase()
@@ -176,22 +164,27 @@ class MainActivity : BaseActivity<MainViewModel>(), NavigationView.OnNavigationI
                     "com.asus.mobilemanager",
                     "com.asus.mobilemanager.entry.FunctionActivity"
                 )
-                else -> Log.d("AutoStart", "Auto-start permission page not available for this manufacturer")
+                else -> {
+                    Snackbar.make(binding.root, R.string.auto_start_not_supported, Snackbar.LENGTH_LONG).show()
+                    return
+                }
             }
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)
         } catch (e: Exception) {
             Log.e("AutoStart", "Error opening auto-start permission page: ${e.message}")
+            Snackbar.make(binding.root, R.string.auto_start_error, Snackbar.LENGTH_LONG).show()
         }
     }
 
-
-private fun markAppAsLaunched() {
-        val editor = sharedPreferences.edit()
-        editor.putBoolean("isFirstLaunch", false)
-        editor.apply()
+    private fun markAppAsLaunched() {
+        sharedPreferences.edit().putBoolean(KEY_IS_FIRST_LAUNCH, false).apply()
     }
+
     companion object {
+        private const val APP_PREFERENCES = "app_preferences"
+        private const val KEY_AUTO_START_REQUESTED = "auto_start_requested"
+        private const val KEY_IS_FIRST_LAUNCH = "isFirstLaunch"
         private const val RC_CREATE_PATTERN = 2002
         private const val RC_VALIDATE_PATTERN = 2003
     }

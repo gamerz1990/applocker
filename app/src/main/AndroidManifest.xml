@@ -102,7 +102,7 @@
         <receiver android:name=".service.AppLockerService" android:exported="false">
             <intent-filter android:priority="100">
                 <action android:name="android.intent.action.PACKAGE_INSTALL"/>
-                <action android:name="android.intent.action.PACKAGE_ADDED"/>  
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
                 <action android:name="android.intent.action.PACKAGE_REMOVED"/>
             </intent-filter>
         </receiver>
@@ -115,29 +115,29 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".ui.callblocker.service.CallReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
-            </intent-filter>
-        </receiver>
+<!--        <receiver-->
+<!--            android:name=".ui.callblocker.service.CallReceiver"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.PHONE_STATE" />-->
+<!--            </intent-filter>-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
 
         <!-- Call Service -->
-        <service
-            android:name=".ui.callblocker.service.CallService"
-            android:permission="android.permission.BIND_INCALL_SERVICE"
-            android:exported="false">
-            <meta-data
-                android:name="android.telecom.IN_CALL_SERVICE_UI"
-                android:value="false" />
-            <intent-filter>
-                <action android:name="android.telecom.InCallService" />
-            </intent-filter>
-        </service>
+<!--        <service-->
+<!--            android:name=".ui.callblocker.service.CallService"-->
+<!--            android:permission="android.permission.BIND_INCALL_SERVICE"-->
+<!--            android:exported="false">-->
+<!--            <meta-data-->
+<!--                android:name="android.telecom.IN_CALL_SERVICE_UI"-->
+<!--                android:value="false" />-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.telecom.InCallService" />-->
+<!--            </intent-filter>-->
+<!--        </service>-->
 
         <!-- Call Blocker Screening Service -->
         <!-- <service
